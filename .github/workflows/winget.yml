@@ -42,7 +42,7 @@ jobs:
           winget install --manifest $newest.FullName --accept-package-agreements --accept-source-agreements --disable-interactivity
           if ($LASTEXITCODE -ne 0) { throw "winget install failed" }
           # winget adds its links folder to PATH for new shells only.
-          $links = @("$env:LOCALAPPDATA\Microsoft\WinGet\Links", "$env:ProgramFiles\WinGet\Links") | Where-Object { Test-Path "$_\fftui.exe" }
+          $links = @(@("$env:LOCALAPPDATA\Microsoft\WinGet\Links", "$env:ProgramFiles\WinGet\Links") | Where-Object { Test-Path "$_\fftui.exe" })
           if (-not $links) { throw "fftui.exe was not linked" }
           $out = & "$($links[0])\fftui.exe" --version
           Write-Output $out
