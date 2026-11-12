@@ -1,0 +1,28 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'in.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf59.27.100
+  Duration: 00:00:01.00, start: 0.000000, bitrate: 377 kb/s
+  Stream #0:0(und): Video: h264 (High) (avc1 / 0x31637661), yuv420p, 320x240 [SAR 1:1 DAR 4:3], 287 kb/s, 25 fps, 25 tbr, 12800 tbn, 50 tbc (default)
+    Metadata:
+      handler_name    : VideoHandler
+      vendor_id       : [0][0][0][0]
+      encoder         : Lavc59.37.100 libx264
+  Stream #0:1(und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, mono, fltp, 70 kb/s (default)
+    Metadata:
+      handler_name    : SoundHandler
+      vendor_id       : [0][0][0][0]
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> h264 (libx264))
+  Stream #0:1 -> #0:1 (aac (native) -> aac (native))
+Press [q] to stop, [?] for help
+[Parsed_scale_0 @ 0x1e987c40] Invalid size 'abc'
+[AVFilterGraph @ 0x1e5dd500] Error initializing filter 'scale' with args 'abc:flags=bicubic'
+Error reinitializing filters!
+Failed to inject frame into filter network: Invalid argument
+Error while processing the decoded data for stream #0:0
+[aac @ 0x1e571dc0] Qavg: 122.056
+[aac @ 0x1e571dc0] 2 frames left in the queue on closing
+Conversion failed!

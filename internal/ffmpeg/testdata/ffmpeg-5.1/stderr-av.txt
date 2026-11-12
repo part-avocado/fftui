@@ -1,0 +1,25 @@
+Input #0, lavfi, from 'testsrc2=size=320x240:rate=25:duration=3':
+  Duration: N/A, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: rawvideo (I420 / 0x30323449), yuv420p, 320x240 [SAR 1:1 DAR 4:3], 25 tbr, 25 tbn
+Input #1, lavfi, from 'sine=frequency=440:duration=3':
+  Duration: N/A, start: 0.000000, bitrate: 705 kb/s
+  Stream #1:0: Audio: pcm_s16le, 44100 Hz, mono, s16, 705 kb/s
+Stream mapping:
+  Stream #0:0 -> #0:0 (rawvideo (native) -> mpeg4 (native))
+  Stream #1:0 -> #0:1 (pcm_s16le (native) -> aac (native))
+Press [q] to stop, [?] for help
+[mpeg4 @ 0x5d1ccf4e4740] too many threads/slices (16), reducing to 15
+Output #0, matroska, to 'out-5.1/av.mkv':
+  Metadata:
+    encoder         : Lavf59.27.100
+  Stream #0:0: Video: mpeg4 (FMP4 / 0x34504D46), yuv420p(progressive), 320x240 [SAR 1:1 DAR 4:3], q=2-31, 200 kb/s, 25 fps, 1k tbn
+    Metadata:
+      encoder         : Lavc59.37.100 mpeg4
+    Side data:
+      cpb: bitrate max/min/avg: 0/0/200000 buffer size: 0 vbv_delay: N/A
+  Stream #0:1: Audio: aac (LC) ([255][0][0][0] / 0x00FF), 44100 Hz, mono, fltp, 69 kb/s
+    Metadata:
+      encoder         : Lavc59.37.100 aac
+frame=   75 fps= 25 q=17.2 Lsize=     180kB time=00:00:03.01 bitrate= 487.5kbits/s speed=   1x    
+video:152kB audio:26kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 1.337940%
+[aac @ 0x5d1ccf4e8100] Qavg: 609.788
