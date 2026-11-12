@@ -28,6 +28,12 @@ scoop bucket add part-avocado https://github.com/part-avocado/scoop
 scoop install part-avocado/fftui
 ```
 
+With winget on Windows, which also installs FFmpeg:
+
+```powershell
+winget install part-avocado.fftui
+```
+
 Or download the archive for your OS from the [releases](https://github.com/part-avocado/fftui/releases), or build from source with Go 1.26.7 or later:
 
 ```sh
