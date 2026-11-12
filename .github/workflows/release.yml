@@ -1,0 +1,37 @@
+name: Release
+
+# Pushing a tag such as v0.1.0 builds every target and publishes a GitHub
+# release. The Homebrew tap (part-avocado/homebrew-tap) picks up the new
+# release on its own schedule.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v7
+        with:
+          go-version: stable
+      # docs/releases/<tag>.md, when it exists, is the release's description;
+      # otherwise GoReleaser lists the commits.
+      - name: Choose release notes
+        id: notes
+        run: |
+          notes="docs/releases/${GITHUB_REF_NAME}.md"
+          if [ -f "$notes" ]; then
+            echo "args=--release-notes=$notes" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: goreleaser/goreleaser-action@v7
+        with:
+          version: "~> v2"
+          args: release --clean ${{ steps.notes.outputs.args }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

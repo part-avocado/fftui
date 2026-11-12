@@ -13,9 +13,15 @@ fftui is a terminal interface for FFmpeg that runs on Linux, macOS, Windows, and
 
 You need FFmpeg 4.4 or later. fftui looks for `ffmpeg` and `ffprobe` on `PATH` and in the usual install folders, and tells you how to install them if they are missing.
 
-## Install from source
+## Install
 
-You need Go 1.26.7 or later.
+With Homebrew on macOS or Linux, which also installs FFmpeg:
+
+```sh
+brew install part-avocado/tap/fftui
+```
+
+Or download the archive for your OS from the [releases](https://github.com/part-avocado/fftui/releases), or build from source with Go 1.26.7 or later:
 
 ```sh
 go install github.com/part-avocado/fftui/cmd/fftui@latest
