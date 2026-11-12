@@ -11,6 +11,7 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 
+	"github.com/part-avocado/fftui/internal/cmdline"
 	"github.com/part-avocado/fftui/internal/ffmpeg"
 	"github.com/part-avocado/fftui/internal/job"
 	"github.com/part-avocado/fftui/internal/ui"
@@ -122,7 +123,11 @@ func TestCommandRunsAsJob(t *testing.T) {
 		t.Fatalf("started %+v\nwant %+v", f.specs, want)
 	}
 	// The app opens on the Jobs screen.
-	assertContains(t, m, "> running   out file.mkv  0%", `ffmpeg -i 'multi stream.mkv' -c:v mpeg4 'out file.mkv'`)
+	command := `ffmpeg -i 'multi stream.mkv' -c:v mpeg4 'out file.mkv'`
+	if cmdline.Windows {
+		command = `ffmpeg -i "multi stream.mkv" -c:v mpeg4 "out file.mkv"`
+	}
+	assertContains(t, m, "> running   out file.mkv  0%", command)
 
 	p := f.proc(t, "out file.mkv")
 	c.set(q.Jobs()[0].Started.Add(4 * time.Second))

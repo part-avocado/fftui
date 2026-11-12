@@ -34,7 +34,7 @@ func touch(t *testing.T, paths ...string) {
 }
 
 func TestBatch(t *testing.T) {
-	dir := t.TempDir()
+	dir := workDir(t)
 	a, b, song := filepath.Join(dir, "a", "sample.mp4"), filepath.Join(dir, "b", "sample.mp4"), filepath.Join(dir, "song.mp3")
 	touch(t, a, b, song)
 	f := newFakeJobs()
@@ -74,7 +74,7 @@ func TestBatch(t *testing.T) {
 }
 
 func TestBatchShowsItsQueuedJobs(t *testing.T) {
-	dir := t.TempDir()
+	dir := workDir(t)
 	a, b := filepath.Join(dir, "a", "sample.mp4"), filepath.Join(dir, "b", "sample.mp4")
 	touch(t, a, b)
 	q := job.NewQueue(1, newFakeJobs().start)
@@ -89,7 +89,7 @@ func TestBatchShowsItsQueuedJobs(t *testing.T) {
 }
 
 func TestBatchProblems(t *testing.T) {
-	dir := t.TempDir()
+	dir := workDir(t)
 	a, b, song := filepath.Join(dir, "a", "sample.mp4"), filepath.Join(dir, "b", "sample.mp4"), filepath.Join(dir, "song.mp3")
 	touch(t, a, b, song)
 	m := newApp(t, appOpts{files: []string{a, b, song}})
@@ -118,7 +118,7 @@ func TestBatchProblems(t *testing.T) {
 func TestCopyCommand(t *testing.T) {
 	var copied []string
 	copyErr := error(nil)
-	dir := t.TempDir()
+	dir := workDir(t)
 	touch(t, filepath.Join(dir, "sample.mp4"))
 	f := newFakeJobs()
 	m := newApp(t, appOpts{files: []string{filepath.Join(dir, "sample.mp4")}, queue: job.NewQueue(1, f.start),

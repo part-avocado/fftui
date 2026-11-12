@@ -105,6 +105,14 @@ func lookExplicit(path string) (string, error) {
 		path = filepath.Join(home, path[1:])
 	}
 	found, err := exec.LookPath(path)
+	// On Windows, LookPath tries the path with .exe and the other
+	// extensions and reports a missing file as not found in %PATH%, which
+	// is wrong for a path. Say what is wrong with the path instead.
+	if errors.Is(err, exec.ErrNotFound) && strings.ContainsAny(path, `/\`) {
+		if _, statErr := os.Stat(path); statErr != nil {
+			err = statErr
+		}
+	}
 	// Keep only the reason, such as "no such file or directory"; the error
 	// message already names the path.
 	var execErr *exec.Error

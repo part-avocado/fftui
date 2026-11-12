@@ -68,12 +68,30 @@ func screen(m tea.Model) string {
 	return ansi.Strip(m.View().Content)
 }
 
+// fixtureDir holds the FFmpeg 9.0 fixtures. It is absolute, so tests that
+// change into a temporary folder still find it.
+var fixtureDir = func() string {
+	dir, err := filepath.Abs(filepath.Join("..", "ffmpeg", "testdata", "ffmpeg-9.0"))
+	if err != nil {
+		panic(err)
+	}
+	return dir
+}()
+
+// workDir changes into a new temporary folder for the rest of the test and
+// returns ".", so the screens show short relative paths on every OS rather
+// than a long temporary folder that wraps or is cut off.
+func workDir(t *testing.T) string {
+	t.Chdir(t.TempDir())
+	return "."
+}
+
 // fakeTools is the FFmpeg 9.0 build in ../ffmpeg/testdata. Its ffprobe
 // answers with the fixtures that real ffprobe wrote for files with these
 // names, in any folder, and fails like ffprobe for any other.
 func fakeTools(t *testing.T) *ffmpeg.Tools {
 	t.Helper()
-	dir := filepath.Join("..", "ffmpeg", "testdata", "ffmpeg-9.0")
+	dir := fixtureDir
 	fixtures := map[string]string{
 		"multi stream.mkv": "probe-multi.json",
 		"song.mp3":         "probe-song.json",

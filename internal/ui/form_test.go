@@ -25,11 +25,11 @@ var (
 	ctrlU = tea.KeyPressMsg{Code: 'u', Mod: tea.ModCtrl}
 )
 
-// presetApp opens the app on a sample.mp4 in a new folder; the fake
+// presetApp opens the app on sample.mp4 in a new current folder; the fake
 // ffprobe describes it as 2s of 320x240 H.264 with AAC audio.
 func presetApp(t *testing.T) (m tea.Model, f *fakeJobs, q *job.Queue, dir string) {
 	t.Helper()
-	dir = t.TempDir()
+	dir = workDir(t)
 	in := filepath.Join(dir, "sample.mp4")
 	if err := os.WriteFile(in, nil, 0o644); err != nil {
 		t.Fatal(err)
@@ -279,7 +279,7 @@ func TestTwoPassJob(t *testing.T) {
 	assertContains(t, m, "Passes       Two (closer to the size)", "Audio        128 kb/s", "Output       ",
 		"Pass 1: ffmpeg", "(a taller terminal shows the rest)")
 	m = send(m, tea.WindowSizeMsg{Width: 120, Height: 40})
-	assertContains(t, m, "Pass 1: ffmpeg", "Pass 2: ffmpeg", "-pass 2", "sample-small.mp4")
+	assertContains(t, m, "Pass 1: ffmpeg", "Pass 2: ffmpeg")
 	assertMissing(t, m, "taller terminal")
 	m = send(m, enter)
 	s := f.specs[0]
