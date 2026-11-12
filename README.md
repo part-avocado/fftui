@@ -21,6 +21,13 @@ With Homebrew on macOS or Linux, which also installs FFmpeg:
 brew install part-avocado/tap/fftui
 ```
 
+With Scoop on Windows, which also installs FFmpeg:
+
+```powershell
+scoop bucket add part-avocado https://github.com/part-avocado/scoop
+scoop install part-avocado/fftui
+```
+
 Or download the archive for your OS from the [releases](https://github.com/part-avocado/fftui/releases), or build from source with Go 1.26.7 or later:
 
 ```sh
