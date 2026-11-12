@@ -47,5 +47,8 @@ jobs:
           $out = & "$($links[0])\fftui.exe" --version
           Write-Output $out
           if ($out -ne "fftui $($newest.Name)") { throw "fftui --version printed '$out'" }
-          winget list --id Gyan.FFmpeg --exact --accept-source-agreements
-          if ($LASTEXITCODE -ne 0) { throw "FFmpeg was not installed as a dependency" }
+          # The FFmpeg dependency gave the ffmpeg command that fftui looks for.
+          $ffmpeg = @(@("$env:LOCALAPPDATA\Microsoft\WinGet\Links", "$env:ProgramFiles\WinGet\Links") | ForEach-Object { "$_\ffmpeg.exe" } | Where-Object { Test-Path $_ })
+          if (-not $ffmpeg) { throw "FFmpeg was not installed as a dependency" }
+          & $ffmpeg[0] -hide_banner -version | Select-Object -First 1
+          if ($LASTEXITCODE -ne 0) { throw "ffmpeg does not run" }
