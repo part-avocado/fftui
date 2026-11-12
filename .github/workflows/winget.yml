@@ -1,0 +1,51 @@
+name: winget manifests
+
+# Checks the manifests in packaging/winget with the real winget before they
+# are sent to microsoft/winget-pkgs: they must validate, install from the
+# release, bring FFmpeg along, and give a working fftui command.
+on:
+  push:
+    branches: [main]
+    paths: ["packaging/winget/**", ".github/workflows/winget.yml"]
+  pull_request:
+    paths: ["packaging/winget/**", ".github/workflows/winget.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install winget if the runner has none
+        shell: pwsh
+        run: |
+          if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+            Install-PackageProvider -Name NuGet -Force | Out-Null
+            Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery | Out-Null
+            Repair-WinGetPackageManager -AllUsers -Latest
+          }
+          winget --version
+      - name: Validate and install each version
+        shell: pwsh
+        run: |
+          winget settings --enable LocalManifestFiles
+          $versions = Get-ChildItem -Directory packaging/winget/manifests/p/part-avocado/fftui
+          foreach ($dir in $versions) {
+            winget validate --manifest $dir.FullName
+            if ($LASTEXITCODE -ne 0) { throw "winget validate failed for $($dir.Name)" }
+          }
+          # Install the newest version, as winget-pkgs would offer it.
+          $newest = $versions | Sort-Object { [version]$_.Name } | Select-Object -Last 1
+          winget install --manifest $newest.FullName --accept-package-agreements --accept-source-agreements --disable-interactivity
+          if ($LASTEXITCODE -ne 0) { throw "winget install failed" }
+          # winget adds its links folder to PATH for new shells only.
+          $links = @("$env:LOCALAPPDATA\Microsoft\WinGet\Links", "$env:ProgramFiles\WinGet\Links") | Where-Object { Test-Path "$_\fftui.exe" }
+          if (-not $links) { throw "fftui.exe was not linked" }
+          $out = & "$($links[0])\fftui.exe" --version
+          Write-Output $out
+          if ($out -ne "fftui $($newest.Name)") { throw "fftui --version printed '$out'" }
+          winget list --id Gyan.FFmpeg --exact --accept-source-agreements
+          if ($LASTEXITCODE -ne 0) { throw "FFmpeg was not installed as a dependency" }
